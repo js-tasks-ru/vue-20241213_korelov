@@ -9,7 +9,7 @@ export default [
 
   {
     rules: {
-      // Здесь вы можете переопределять правила по своему усмотрению
+      "vue/mustache-interpolation-spacing": ["error", "always"]
     }
   }
 ]
