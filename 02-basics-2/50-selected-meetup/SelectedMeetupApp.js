@@ -1,78 +1,97 @@
-import { defineComponent } from 'vue'
-// import { getMeetup } from './meetupsService.ts'
+import { ref, unref, computed, watchEffect, defineComponent } from 'vue';
+import { getMeetup } from './meetupsService.ts';
 
 export default defineComponent({
   name: 'SelectedMeetupApp',
 
-  setup() {},
+  setup() {
+    const meetupIds = [1, 2, 3, 4, 5];
 
-  template: `
+    const currentMeetupId = ref(meetupIds.at(0));
+    const meetupData = ref(null);
+
+    const isPrevButtonDisabled = computed(() => meetupIds.at(0) === unref(currentMeetupId));
+    const isNextButtonDisabled = computed(() => meetupIds.at(-1) === unref(currentMeetupId));
+
+    const handlePrevButtonClick = () => {
+      const currentIndex = meetupIds.indexOf(unref(currentMeetupId));
+      const newIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+
+      currentMeetupId.value = meetupIds.at(newIndex);
+    };
+
+    const handleNextButtonClick = () => {
+      const currentIndex = meetupIds.indexOf(unref(currentMeetupId));
+      const newIndex = currentIndex >= meetupIds.length - 1 ? meetupIds.length - 1 : currentIndex + 1;
+
+      currentMeetupId.value = meetupIds.at(newIndex);
+    };
+
+    watchEffect(async () => {
+      try {
+        meetupData.value = await getMeetup(unref(currentMeetupId));
+      } catch (error) {
+        meetupData.value = null;
+
+        console.error(error);
+      }
+    });
+
+    return {
+      meetupIds,
+      currentMeetupId,
+      meetupData,
+      isPrevButtonDisabled,
+      isNextButtonDisabled,
+      handlePrevButtonClick,
+      handleNextButtonClick,
+    };
+  },
+
+  template: /* html */ `
     <div class="meetup-selector">
       <div class="meetup-selector__control">
-        <button class="button button--secondary" type="button" disabled>Предыдущий</button>
+        <button
+          class="button button--secondary"
+          type="button"
+          :disabled="isPrevButtonDisabled"
+          @click="handlePrevButtonClick"
+        >
+          Предыдущий
+        </button>
 
         <div class="radio-group" role="radiogroup">
-          <div class="radio-group__button">
+          <div class="radio-group__button" v-for="meetupId in meetupIds" :key="meetupId">
             <input
-              id="meetup-id-1"
+              :id="\`meetup-id-\${meetupId}\`"
               class="radio-group__input"
               type="radio"
               name="meetupId"
-              value="1"
+              :value="meetupId"
+              v-model="currentMeetupId"
             />
-            <label for="meetup-id-1" class="radio-group__label">1</label>
-          </div>
-          <div class="radio-group__button">
-            <input
-              id="meetup-id-2"
-              class="radio-group__input"
-              type="radio"
-              name="meetupId"
-              value="2"
-            />
-            <label for="meetup-id-2" class="radio-group__label">2</label>
-          </div>
-          <div class="radio-group__button">
-            <input
-              id="meetup-id-3"
-              class="radio-group__input"
-              type="radio"
-              name="meetupId"
-              value="3"
-            />
-            <label for="meetup-id-3" class="radio-group__label">3</label>
-          </div>
-          <div class="radio-group__button">
-            <input
-              id="meetup-id-4"
-              class="radio-group__input"
-              type="radio"
-              name="meetupId"
-              value="4"
-            />
-            <label for="meetup-id-4" class="radio-group__label">4</label>
-          </div>
-          <div class="radio-group__button">
-            <input
-              id="meetup-id-5"
-              class="radio-group__input"
-              type="radio"
-              name="meetupId"
-              value="5"
-            />
-            <label for="meetup-id-5" class="radio-group__label">5</label>
+            <label :for="\`meetup-id-\${meetupId}\`" class="radio-group__label">{{ meetupId }}</label>
           </div>
         </div>
 
-        <button class="button button--secondary" type="button">Следующий</button>
+        <button
+          class="button button--secondary"
+          type="button"
+          :disabled="isNextButtonDisabled"
+          @click="handleNextButtonClick"
+        >
+          Следующий
+        </button>
       </div>
 
       <div class="meetup-selector__cover">
         <div class="meetup-cover">
-          <h1 class="meetup-cover__title">Some Meetup Title</h1>
+          <template v-if="meetupData && meetupData.title">
+            <h1 class="meetup-cover__title">{{ meetupData.title }}</h1>
+          </template>
         </div>
       </div>
 
     </div>
   `,
-})
+});
