@@ -1,4 +1,4 @@
-import vueCourseConfig from '@shgk/vue-course-taskbook/configs/eslint.config.js'
+import vueCourseConfig from '@shgk/vue-course-taskbook/configs/eslint.config.js';
 
 export default [
   // По умолчанию установлены:
@@ -9,7 +9,8 @@ export default [
 
   {
     rules: {
-      "vue/mustache-interpolation-spacing": ["error", "always"]
-    }
-  }
-]
+      'semi': ['error', 'always'],
+      'vue/mustache-interpolation-spacing': ['error', 'always'],
+    },
+  },
+];
