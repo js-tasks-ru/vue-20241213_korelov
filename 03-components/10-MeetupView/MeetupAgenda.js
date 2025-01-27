@@ -1,6 +1,6 @@
-import { defineComponent } from 'vue'
-import MeetupAgendaItem from './MeetupAgendaItem.js'
-import './MeetupAgenda.css'
+import { defineComponent } from 'vue';
+import MeetupAgendaItem from './MeetupAgendaItem.js';
+import './MeetupAgenda.css';
 
 export default defineComponent({
   name: 'MeetupAgenda',
@@ -16,11 +16,11 @@ export default defineComponent({
     },
   },
 
-  template: `
+  template: /* html */ `
     <ul class="agenda">
       <li v-for="agendaItem in agenda" :key="agendaItem.id" class="agenda__item">
         <MeetupAgendaItem :agenda-item="agendaItem" />
       </li>
     </ul>
   `,
-})
+});
