@@ -1,52 +1,52 @@
-import { defineComponent } from 'vue'
-import { getWeatherData, WeatherConditionIcons } from './weather.service.ts'
-import './WeatherApp.css'
+
+import { defineComponent } from 'vue';
+import { getWeatherData, WeatherConditionIcons } from './weather.service.ts';
+import './WeatherApp.css';
+import WeatherList from './components/WeatherList/WeatherList.js';
 
 export default defineComponent({
   name: 'WeatherApp',
 
-  template: `
+  components: {
+    WeatherList,
+  },
+
+  setup() {
+    const getTimestamp = (time) => {
+      return new Date(`1970-01-01T${time}:00`);
+    };
+
+    const getIsNight = (nowTime, sunriseTime, sunsetTime) => {
+      const nowTimestamp = getTimestamp(nowTime);
+      const sunriseTimestamp = getTimestamp(sunriseTime);
+      const sunsetTimestamp = getTimestamp(sunsetTime);
+
+      return nowTimestamp < sunriseTimestamp || nowTimestamp > sunsetTimestamp;
+    };
+
+    const cards = JSON.parse(JSON.stringify(getWeatherData()))
+      .map((card) => {
+        const { current } = card;
+        const { dt, sunrise, sunset, temp, weather, pressure } = current;
+
+        card.current.tempC = (temp - 273.15).toFixed(1);
+        card.current.weather.icon = WeatherConditionIcons[weather.id];
+        card.current.pressureMm = Math.round(pressure * 0.75);
+        card.current.isNight = getIsNight(dt, sunrise, sunset);
+
+        return card;
+      });
+
+    return {
+      cards,
+    };
+  },
+
+  template: /* html */`
     <div>
       <h1 class="title">Погода в Средиземье</h1>
 
-      <ul class="weather-list unstyled-list">
-        <li class="weather-card weather-card--night">
-          <div class="weather-alert">
-            <span class="weather-alert__icon">⚠️</span>
-            <span class="weather-alert__description">Королевская метеослужба короля Арагорна II: Предвещается наступление сильного шторма.</span>
-          </div>
-          <div>
-            <h2 class="weather-card__name">
-              Гондор
-            </h2>
-            <div class="weather-card__time">
-              07:17
-            </div>
-          </div>
-          <div class="weather-conditions">
-            <div class="weather-conditions__icon" title="thunderstorm with heavy rain">⛈️</div>
-            <div class="weather-conditions__temp">15.0 °C</div>
-          </div>
-          <div class="weather-details">
-            <div class="weather-details__item">
-              <div class="weather-details__item-label">Давление, мм рт. ст.</div>
-              <div class="weather-details__item-value">754</div>
-            </div>
-            <div class="weather-details__item">
-              <div class="weather-details__item-label">Влажность, %</div>
-              <div class="weather-details__item-value">90</div>
-            </div>
-            <div class="weather-details__item">
-              <div class="weather-details__item-label">Облачность, %</div>
-              <div class="weather-details__item-value">100</div>
-            </div>
-            <div class="weather-details__item">
-              <div class="weather-details__item-label">Ветер, м/с</div>
-              <div class="weather-details__item-value">10.5</div>
-            </div>
-          </div>
-        </li>
-      </ul>
+      <WeatherList :cards="cards" />
     </div>
   `,
-})
+});
