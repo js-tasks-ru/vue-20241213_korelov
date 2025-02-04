@@ -1,5 +1,5 @@
-import { computed, defineComponent } from 'vue'
-import { UiIcon } from '@shgk/vue-course-ui'
+import { computed, defineComponent } from 'vue';
+import { UiIcon } from '@shgk/vue-course-ui';
 
 export default defineComponent({
   name: 'MeetupInfo',
@@ -23,21 +23,21 @@ export default defineComponent({
   },
 
   setup(props) {
-    const isoDate = computed(() => new Date(props.date).toISOString().slice(0, 10))
+    const isoDate = computed(() => new Date(props.date).toISOString().slice(0, 10));
     const localDate = computed(() =>
       new Date(props.date).toLocaleString(navigator.language, {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
       }),
-    )
+    );
     return {
       isoDate,
       localDate,
-    }
+    };
   },
 
-  template: `
+  template: /* html */ `
     <ul class="meetup-info">
       <li>
         <UiIcon icon="user" class="meetup-info__icon" />
@@ -53,4 +53,4 @@ export default defineComponent({
       </li>
     </ul>
   `,
-})
+});

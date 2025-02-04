@@ -4,7 +4,7 @@ const App = defineComponent({
   name: 'App',
   setup() {
     const getDate = () => {
-      return new Date().toLocaleDateString('En-en', {
+      return new Date().toLocaleDateString(navigator.language, {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -16,7 +16,7 @@ const App = defineComponent({
     };
   },
 
-  template: /* html */`<div>Сегодня {{today}}</div>`,
+  template: /* html */`<div>Сегодня {{ today }}</div>`,
 });
 
 createApp(App).mount('#app');

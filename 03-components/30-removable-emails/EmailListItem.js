@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'EmailListItem',
@@ -15,10 +15,22 @@ export default defineComponent({
     },
   },
 
-  template: `
+  emits: ['removeEmailByIndex'],
+
+  setup(props, { emit }) {
+    const handleRemoveButtonClick = () => {
+      emit('removeEmailByIndex');
+    };
+
+    return {
+      handleRemoveButtonClick,
+    };
+  },
+
+  template: /* html */ `
     <li :class="{ marked }">
       {{ email }}
-      <button type="button" aria-label="Удалить" @click.stop>❌</button>
+      <button type="button" aria-label="Удалить" @click.stop="handleRemoveButtonClick">❌</button>
     </li>
   `,
-})
+});

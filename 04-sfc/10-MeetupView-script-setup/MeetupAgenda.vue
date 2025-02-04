@@ -1,21 +1,16 @@
-<script>
-import { defineComponent } from 'vue'
-import MeetupAgendaItem from './MeetupAgendaItem.vue'
+<script setup>
+import MeetupAgendaItem from './MeetupAgendaItem.vue';
 
-export default defineComponent({
+defineProps({
+  agenda: {
+    type: Array,
+    required: true,
+  },
+});
+
+defineOptions({
   name: 'MeetupAgenda',
-
-  components: {
-    MeetupAgendaItem,
-  },
-
-  props: {
-    agenda: {
-      type: Array,
-      required: true,
-    },
-  },
-})
+});
 </script>
 
 <template>

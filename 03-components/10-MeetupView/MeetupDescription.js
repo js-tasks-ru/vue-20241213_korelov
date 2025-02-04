@@ -1,5 +1,5 @@
-import { defineComponent } from 'vue'
-import './MeetupDescription.css'
+import { defineComponent } from 'vue';
+import './MeetupDescription.css';
 
 export default defineComponent({
   name: 'MeetupDescription',
@@ -10,7 +10,7 @@ export default defineComponent({
     },
   },
 
-  template: `
+  template: /* html */ `
     <div class="meetup-description">{{ description }}</div>
   `,
-})
+});

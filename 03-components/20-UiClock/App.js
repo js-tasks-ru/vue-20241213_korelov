@@ -1,5 +1,5 @@
-import { defineComponent, ref } from 'vue'
-import UiClock from './UiClock.js'
+import { defineComponent, ref } from 'vue';
+import UiClock from './UiClock.js';
 
 export default defineComponent({
   name: 'App',
@@ -9,13 +9,14 @@ export default defineComponent({
   },
 
   setup() {
-    const showClock = ref(true)
+    const showClock = ref(true);
+
     return {
       showClock,
-    }
+    };
   },
 
-  template: `
+  template: /* html */ `
     <div>
       <label>
         <input type="checkbox" v-model="showClock" />
@@ -24,4 +25,4 @@ export default defineComponent({
       <UiClock v-if="showClock" />
     </div>
   `,
-})
+});
